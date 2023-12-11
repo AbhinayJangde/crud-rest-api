@@ -1,20 +1,54 @@
-
+import StudentModel from "../models/Student.js"
 class Student{
-    static getAllStudent = (req,res)=>{
-        res.send("get all students")
+    static getAllStudent = async (req,res)=>{
+        try {
+            const data = await StudentModel.find()
+            res.send(data)
+        } catch (error) {
+            console.log(error)
+        }
     }
-    static getStudentById = (res,res)=>{
-        res.send("get student by id")
+    static getStudentById = async (req,res)=>{
+        try {
+            const {id} = req.params
+            const data = await StudentModel.findById(id)
+            res.send(data)
+        } catch (error) {
+            console.log(error)
+            
+        }
     }
-    static createStudent = (req,res)=>{
-        res.send("create student")
+    static createStudent = async (req,res)=>{
+       try {
+            const {name,age,fees} = req.body
+            const doc = new StudentModel({
+                name:name,
+                age:age,
+                fees:fees
+            })
+            const result = await doc.save()
+            res.status(201).send(result)
+       } catch (error) {
+            console.log(error)
+       }
     }
 
-    static updateStudentById = (req,res)=>{
-        res.send("update student by id")
+    static updateStudentById = async (req,res)=>{
+        try {
+            const result = await StudentModel.findByIdAndUpdate(req.params.id,req.body)
+            res.send(result)
+        } catch (error) {
+            console.log(error)
+        }
     }
-    static deleteStudentById = (req,res)=>{
-        res.send("delete students by id")
+    static deleteStudentById = async (req,res)=>{
+        try {
+            const result = await StudentModel.findByIdAndDelete(req.params.id)
+            res.status(204).send(result)
+        } catch (error) {
+            console.log(error)
+            
+        }
     }
 
 }
